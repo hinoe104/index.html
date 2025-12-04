@@ -1,0 +1,688 @@
+:root {
+    --bg-color: #FDFBF7;
+    --text-color: #333333;
+    --accent-color: #C5A059;
+    --accent-hover: #A77D4A;
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --font-jp: 'Zen Old Mincho', serif;
+    --font-en: 'Cormorant Garamond', serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-jp);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden; /* 横スクロールを強制的に隠す */
+}
+
+.site-header {
+    text-align: center;
+    padding: 3rem 1rem;
+    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+}
+
+.site-header h1 {
+    font-family: var(--font-en);
+    font-size: 3rem;
+    margin: 0;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--text-color);
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    color: var(--accent-color);
+    margin-top: 0.5rem;
+    letter-spacing: 0.2em;
+}
+
+main {
+    flex: 1;
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+h2, h3 {
+    text-align: center;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+/* Buttons */
+.divination-options, .spread-options {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+button {
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    font-family: var(--font-jp);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.divination-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 140px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    background-color: #fff;
+}
+
+.divination-btn .icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.divination-btn.active, .divination-btn:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.spread-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 30px;
+    font-size: 1rem;
+}
+
+.spread-btn.active, .spread-btn:hover {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+.action-btn {
+    display: block;
+    margin: 2rem auto;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    background-color: var(--text-color);
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+}
+
+.action-btn:hover {
+    background-color: var(--accent-color);
+}
+
+.action-btn.secondary {
+    background-color: transparent;
+    border: 1px solid var(--text-color);
+    color: var(--text-color);
+}
+.action-btn.secondary:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+#reset-btn {
+    max-width: 650px; /* シールドチャートの幅に合わせる */
+    box-sizing: border-box; /* パディングを含めて幅を計算 */
+}
+
+
+/* Utility */
+.hidden {
+    display: none !important;
+}
+
+.fade-in {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards Grid Base */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Common Card Styling */
+.card-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 110px;
+    animation: fadeIn 1s ease-in-out;
+    text-align: center;
+}
+
+.card-visual {
+    width: 100px;
+    height: 170px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    box-shadow: var(--card-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    position: relative;
+    transition: transform 0.5s ease;
+    overflow: hidden;
+}
+
+.card-visual.lenormand .visual-inner {
+    font-size: 1.8rem; /* ルノルマンカードのフォントサイズ */
+}
+
+
+.card-visual.reversed {
+    transform: rotate(180deg);
+}
+
+.visual-inner {
+    text-align: center;
+    font-family: var(--font-en);
+    font-size: 1.1rem;
+    line-height: 1.1;
+    color: var(--accent-color);
+    opacity: 0.8;
+}
+
+.position-name {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.3rem;
+    height: 1.1em;
+    white-space: nowrap;
+}
+
+.card-name {
+    font-family: var(--font-jp);
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.2;
+}
+
+/* Highlighting Key Cards */
+.key-card .card-visual {
+    border: 2px solid var(--accent-color);
+    background-color: rgba(197, 160, 89, 0.1);
+    box-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    color: #999;
+    border-top: 1px solid rgba(0,0,0,0.05);
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    .site-header h1 { font-size: 2.2rem; }
+    .divination-btn { width: 100px; height: 120px; }
+    .cards-container { gap: 1rem; }
+}
+
+/* --- RESULT LAYOUT --- */
+
+.result-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.visual-area {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    flex-direction: column; /* 要素を縦並びにする */
+    align-items: center;   /* 要素を中央寄せにする */
+}
+
+.list-area {
+    flex: 1;
+    min-width: 250px;
+    text-align: left;
+    display: flex;
+    gap: 1rem;
+}
+
+.list-separator {
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--accent-color), transparent);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.separator-icon {
+    background: var(--bg-color);
+    color: var(--accent-color);
+    padding: 0.5rem 0;
+    font-size: 1.2rem;
+}
+
+.result-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.result-list li {
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.list-pos {
+    font-size: 0.85rem;
+    color: #888;
+    margin-right: 1rem;
+    min-width: 60px;
+}
+
+.list-name {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.reversed-mark {
+    color: #9E2A2B; /* 上品な深紅 */
+    font-family: var(--font-en); /* 英字フォントで美しく */
+    font-weight: 600;
+    margin-left: 0.3rem;
+    font-size: 0.9em;
+}
+
+/* --- Tarot Layouts --- */
+
+.cards-container.tarot-one-layout {
+    display: grid;
+    grid-template-areas: "msg";
+    justify-content: center;
+    padding: 1rem;
+}
+
+.cards-container.tarot-three-layout {
+    display: grid;
+    grid-template-areas: "past present future";
+    grid-template-columns: repeat(3, 120px);
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.cards-container.tarot-greek-layout {
+    display: grid;
+    grid-template-areas:
+        ". advice ."
+        "feelings present outcome"
+        ". obstacle .";
+    grid-template-columns: repeat(3, 120px);
+    grid-template-rows: repeat(3, 170px);
+    justify-content: center;
+    gap: 1rem;
+}
+
+
+
+
+
+/* Celtic Cross Layout */
+.cards-container.tarot-celtic-layout {
+    display: grid;
+    grid-template-columns: 120px 120px 120px 50px 120px;
+    grid-template-rows: repeat(4, 170px); 
+    grid-template-areas:
+        ". conscious . . outcome"
+        "past cross_center near_future . hopes"
+        ". unconscious . . external"
+        ". . . . querent";
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 0;
+}
+
+/* Horseshoe Layout (U-Shape) */
+.cards-container.tarot-horseshoe-layout {
+    display: grid !important;
+    grid-template-columns: repeat(7, 1fr);
+    /* 4 rows for the steps. */
+    grid-template-rows: 60px 60px 60px 170px;
+    grid-template-areas:
+        "past . . . . . outcome"
+        ". present . . . obstacles ."
+        ". . near_future . influences . ."
+        ". . . advice . . .";
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem 0;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.cards-container.tarot-horseshoe-layout .card-slot {
+    /* Force size to prevent shrinking */
+    width: 100px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align to top of grid area */
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.cards-container.tarot-horseshoe-layout .card-visual {
+    width: 100px !important;
+    height: 170px !important;
+    flex-shrink: 0; /* Prevent shrinking */
+}
+
+/* Z-Index management for overlaps */
+.cards-container.tarot-horseshoe-layout .geo-area-past, 
+.cards-container.tarot-horseshoe-layout .geo-area-outcome { z-index: 4; }
+.cards-container.tarot-horseshoe-layout .geo-area-present, 
+.cards-container.tarot-horseshoe-layout .geo-area-obstacles { z-index: 3; }
+.cards-container.tarot-horseshoe-layout .geo-area-near_future, 
+.cards-container.tarot-horseshoe-layout .geo-area-influences { z-index: 2; }
+.cards-container.tarot-horseshoe-layout .geo-area-advice { z-index: 1; }
+.cards-container.tarot-celtic-layout .card-slot {
+    height: 100%;
+    justify-content: center;
+    position: relative;
+}
+/* Card 1 Name Position */
+.cards-container.tarot-celtic-layout .card-slot:first-child .card-name {
+    display: none; 
+}
+.tarot-celtic-layout .celtic-obstacle {
+    transform: none;
+    grid-area: cross_center;
+    z-index: 2;
+    pointer-events: none;
+    justify-content: center;
+    height: 100%;
+}
+.tarot-celtic-layout .celtic-obstacle .card-visual {
+    transform: rotate(90deg);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* --- Lenormand Layouts --- */
+
+.cards-container.lenormand-9-layout {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.cards-container.lenormand-36-layout {
+    display: grid !important;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 0.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.cards-container.lenormand-36-layout .card-slot:nth-child(33) {
+    grid-column-start: 3;
+}
+.cards-container.lenormand-36-layout .card-visual {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2/3;
+}
+.cards-container.lenormand-36-layout .card-name { 
+    font-size: 0.8rem; 
+    white-space: normal;
+    line-height: 1.1;
+    height: 2.2em;
+    overflow: hidden;
+}
+.cards-container.lenormand-36-layout .card-slot { 
+    width: auto; 
+    margin-bottom: 1rem;
+}
+
+
+
+
+/* Responsive */
+@media (max-width: 900px) {
+    .site-header h1 { font-size: 2.2rem; } /* タイトルも少し小さく */
+    
+    /* 占術ボタンを縮小して横並び維持（または綺麗に折り返し） */
+    .divination-btn { 
+        width: 90px; 
+        height: 110px; 
+        font-size: 0.9rem; /* 文字サイズも調整 */
+    }
+    .divination-btn .icon {
+        font-size: 2rem;
+    }
+
+    .result-wrapper {
+        flex-direction: column;
+        align-items: center;
+        width: 100%; /* コンテナ幅いっぱい */
+        overflow-x: hidden; /* 横スクロール防止 */
+    }
+    .list-separator {
+        display: none;
+    }
+    .list-area {
+        width: 100%;
+        box-sizing: border-box; /* パディングを含めて計算 */
+        border-top: 1px solid var(--accent-color);
+        padding: 1rem 0.5rem; /* 左右に余白を持たせる */
+    }
+    
+    /* スマホでのカードサイズ調整 - さらに縮小 */
+    .card-visual {
+        width: 75px; 
+        height: 128px; /* 16:9比率を維持 */
+    }
+    .card-visual.tarot {
+        width: 75px; 
+        height: 128px;
+    }
+    .card-slot {
+        width: 80px; /* スロット幅も調整 */
+    }
+
+    /* タロットレイアウト調整 */
+    .cards-container.tarot-three-layout {
+        grid-template-columns: repeat(3, 80px); /* 列幅をさらに縮小 */
+        gap: 0.5rem;
+    }
+    
+    .cards-container.tarot-one-layout {
+        transform: scale(1); /* ワンオラクルは縮小不要 */
+        padding: 1rem;
+    }
+
+    .tarot-celtic-layout {
+        transform: scale(0.6); /* ケルト十字はさらに大幅に縮小 */
+        transform-origin: top center;
+        margin-bottom: -300px; /* 縮小分の余白詰めをさらに増やす */
+    }
+    
+    /* ケルト十字：縮小と高さ制限 */
+    .tarot-celtic-layout {
+        transform: scale(0.6);
+        transform-origin: top center;
+        /* 4行目(querent)が見切れないように高さを確保し、overflow制限を解除 */
+        height: auto; 
+        min-height: 500px; /* 最低限の高さを確保 */
+        margin-bottom: -200px; /* 下部の余白を調整 */
+        overflow: visible; /* はみ出しを許可 */
+    }
+    
+    /* ギリシャ十字：縮小して表示 */
+    .cards-container.tarot-greek-layout {
+        transform: scale(0.6);
+        transform-origin: top center;
+        width: 166%; /* 縮小分（1/0.6）だけ幅を広げる */
+        margin-left: -33%; /* 中央寄せのためのオフセット */
+        margin-bottom: -200px; /* 余白調整 */
+    }
+    /* ホースシュー：横スクロールで表示 */
+    .cards-container.tarot-horseshoe-layout {
+        display: grid !important; /* Gridレイアウトを維持 */
+        transform: none; /* 縮小解除 */
+        width: 100%;
+        max-width: 90vw; /* 画面幅より少し小さくしてスクロール領域を確保 */
+        grid-template-columns: repeat(7, 100px) !important; /* カラム幅を固定 */
+        overflow-x: auto; /* 横スクロール有効化 */
+        -webkit-overflow-scrolling: touch; /* iOSでの慣性スクロール */
+        justify-content: start; /* 左詰めで開始 */
+        padding: 0 1rem 1rem 1rem; /* スクロールバー干渉回避と余白 */
+        margin: 0 auto; /* コンテナ自体は中央寄せ */
+    }
+    
+    .cards-container.tarot-horseshoe-layout .card-slot,
+    .cards-container.tarot-greek-layout .card-slot {
+        /* 特になし */
+    }
+
+
+
+    /* シールドチャート：横スクロールで表示 */
+    .shield-grid {
+        transform: none; /* 縮小解除 */
+        width: auto !important; 
+        min-width: 650px !important; /* 幅を確保 */
+        margin: 0 auto; /* 中央寄せ（可能な場合） */
+    }
+    .shield-chart-wrapper {
+        overflow-x: auto; /* 横スクロール有効化 */
+        padding: 1rem 0;
+        display: flex;
+        justify-content: flex-start; /* 左詰めでスクロール */
+        width: 100%;
+    }
+
+    /* グランタブロー：画面幅に収める */
+    .cards-container.lenormand-36-layout {
+        display: grid !important;
+        grid-template-columns: repeat(8, 1fr) !important;
+        width: 100%;
+        min-width: 0; /* 幅制限解除 */
+        overflow-x: hidden; /* スクロールなし */
+        justify-content: center;
+        gap: 4px; /* 隙間を少し広げる */
+        padding: 0.5rem;
+        box-sizing: border-box;
+    }
+
+    .cards-container.lenormand-36-layout .card-slot {
+        width: 100%; /* グリッドセルいっぱいに */
+        margin-bottom: 0.2rem;
+    }
+
+    .cards-container.lenormand-36-layout .card-visual {
+        width: 100%; /* 親要素に合わせる */
+        height: auto;
+        aspect-ratio: 2/3; /* 縦横比維持 */
+        border-radius: 2px; /* 角丸も小さく */
+    }
+
+    .cards-container.lenormand-36-layout .visual-inner {
+        font-size: 0.9rem !important; /* 番号を少し大きく */
+    }
+
+    .cards-container.lenormand-36-layout .card-name {
+        /* display: none; // 名前を表示するため削除 */
+        font-size: 0.7rem; /* カード名を小さく */
+        line-height: 1; /* 行間を詰める */
+        height: auto; /* 高さを自動調整 */
+        white-space: normal; /* 折り返しを許可 */
+        overflow: visible; /* はみ出しを許可 */
+    }
+
+    .cards-container.lenormand-36-layout .position-name {
+        display: none; /* pos1などの表示を削除 */
+    }
+
+    .cards-container.lenormand-5-layout {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        max-width: 100vw;
+        justify-content: flex-start;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        box-sizing: border-box; /* typo 修正 */
+    }
+    .cards-container.lenormand-5-layout .card-slot {
+        flex: 0 0 auto;
+        width: 75px;
+    }
+}
+    
+    
+    
+    /* 汎用カードコンテナのFlexbox調整 */
+    
+    .cards-container {
+    
+        display: flex;
+    
+        flex-wrap: wrap; /* 普段は折り返す */
+    
+        justify-content: center;
+    
+        gap: 1rem;
+    
+        max-width: 900px;
+    
+        margin: 0 auto;
+    
+    }
+    
+    
+    
+    /* 5枚引きは特に折り返さない */
+    
+    .cards-container.lenormand-5-layout {
+    
+        flex-wrap: nowrap;
+    
+    }
