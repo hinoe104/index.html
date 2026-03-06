@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>よくある質問 - Luminous Salon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Zen+Old+Mincho:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --bg-color: #FDFBF7;
+    --text-color: #333333;
+    --accent-color: #C5A059;
+    --font-jp: 'Zen Old Mincho', serif;
+    --font-en: 'Cormorant Garamond', serif;
+    --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+* { box-sizing: border-box; }
+body { background: var(--bg-color); color: var(--text-color); font-family: var(--font-jp); margin: 0; padding: 0; line-height: 1.8; display: flex; flex-direction: column; min-height: 100vh; }
+.site-header { text-align: center; padding: 3rem 1rem 2rem; border-bottom: 1px solid rgba(197,160,89,0.2); }
+.site-header h1 { font-family: var(--font-en); font-size: 2.4rem; margin: 0; font-weight: 400; letter-spacing: 0.1em; }
+.site-header h1 a { color: inherit; text-decoration: none; }
+.subtitle { font-size: 0.85rem; color: var(--accent-color); margin-top: 0.4rem; letter-spacing: 0.2em; }
+main { flex: 1; max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 4rem; width: 100%; }
+.page-title { font-family: var(--font-en); font-size: 2rem; font-weight: 400; letter-spacing: 0.08em; text-align: center; margin-bottom: 0.5rem; }
+.page-subtitle { text-align: center; font-size: 0.85rem; color: #999; margin-bottom: 3rem; letter-spacing: 0.1em; }
+
+.faq-section { margin-bottom: 3rem; }
+.faq-section-label { font-size: 0.7rem; letter-spacing: 0.25em; color: var(--accent-color); text-transform: uppercase; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(197,160,89,0.2); }
+
+.faq-item { margin-bottom: 2rem; }
+.faq-q { font-size: 1rem; font-weight: 600; margin-bottom: 0.6rem; display: flex; gap: 0.8rem; align-items: flex-start; }
+.faq-q::before { content: "Q."; font-family: var(--font-en); color: var(--accent-color); font-size: 1rem; flex-shrink: 0; margin-top: 0.05em; }
+.faq-a { font-size: 0.9rem; color: #555; line-height: 1.9; padding-left: 1.8rem; }
+.faq-a a { color: var(--accent-color); }
+
+.highlight-box { background: rgba(197,160,89,0.06); border-left: 3px solid var(--accent-color); padding: 1.2rem 1.5rem; border-radius: 0 6px 6px 0; margin: 0.8rem 0 0 1.8rem; }
+.highlight-box p { font-size: 0.88rem; color: #555; margin: 0; line-height: 1.9; }
+
+.cta-wrap { text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(197,160,89,0.2); }
+.cta-wrap p { font-size: 0.85rem; color: #999; margin-bottom: 1.5rem; }
+.cta-btn { display: inline-block; padding: 1rem 3rem; background: var(--text-color); color: #fff; font-family: var(--font-jp); font-size: 1rem; letter-spacing: 0.1em; text-decoration: none; border-radius: 2px; transition: background 0.3s; }
+.cta-btn:hover { background: var(--accent-color); }
+footer { text-align: center; padding: 2rem; font-size: 0.8rem; color: #999; border-top: 1px solid rgba(0,0,0,0.05); }
+@media (max-width: 600px) { .site-header h1 { font-size: 1.8rem; } main { padding: 2rem 1rem 3rem; } }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <h1><a href="luminous-reading.html">Luminous Salon</a></h1>
+    <p class="subtitle">よくある質問</p>
+</header>
+<main>
+    <p class="page-title">FAQ</p>
+    <p class="page-subtitle">よくある質問と、このアプリの考え方</p>
+
+    <div class="faq-section">
+        <p class="faq-section-label">このアプリについて</p>
+
+        <div class="faq-item">
+            <p class="faq-q">普通の占いアプリと何が違うの？</p>
+            <p class="faq-a">多くの占いアプリはAIがカードを「選び」、解釈を「作り」ます。Luminous Salonは違います。カードのドローはPythonのランダム抽出で行い、AIはその結果を読むだけです。カードが示した内容に忠実に、ジャッジせず、忖度せず。あなたが自分で考えるための材料を渡すことが、このアプリの役割です。</p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-q">「ジャッジしない」ってどういうこと？</p>
+            <p class="faq-a">占いは善悪を超えたところにあります。不倫、別れ、お金、仕事——どんな相談内容であっても、AIは道徳的な評価をしません。出たカードが示すエネルギーと流れを、ただ正直に読みます。説教もしません。あなたの選択はあなたのものです。</p>
+            <div class="highlight-box"><p>「このAI、説教してこないから好き」<br>そう思ってもらえたら、このアプリは正しく動いています。</p></div>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-q">「忖度しない」ってどういうこと？</p>
+            <p class="faq-a">一般的なAI占いは、ユーザーが聞きたそうな答えに寄せる傾向があります。「きっとうまくいきます」のような。Luminous Salonはカードの結果に忠実なので、厳しい内容が出れば厳しく読みます。それがカードの仕事だからです。</p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-q">なぜ中上級者向けなの？初心者はダメ？</p>
+            <p class="faq-a">ダメではありませんが、このアプリはカード名を見れば絵柄と意味が浮かぶくらいの方を想定しています。キーワード解説や意味の一覧は出ません。カードの名前と正逆位置だけが表示され、あとはあなたが読む。AIリーディングはその補助です。</p>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <p class="faq-section-label">料金・APIキーについて</p>
+
+        <div class="faq-item">
+            <p class="faq-q">なぜ自分でAPIキーを用意しないといけないの？</p>
+            <p class="faq-a">あなたの相談内容を、運営のサーバーに通したくないからです。APIキーを自分で用意することで、あなたとAIの会話は直接つながります。不倫の相談も、お金の悩みも、誰かのデータベースに残りません。</p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-q">$10チャージしたら足りなくなる？</p>
+            <p class="faq-a">1回のリーディングコストは約0.02円です。$10（約1,500円）チャージすれば約70,000回分。毎日使っても190年分の計算です。使わない日はゼロ円。残高はOpenRouterのダッシュボードでいつでも確認できます。</p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-q">APIキーが漏れたら怖い</p>
+            <p class="faq-a">APIキーはあなたのブラウザのlocalStorageにのみ保存されます。このサイトのサーバーには一切送信されません。ただしブラウザのキャッシュをクリアすると消えます。その際は再発行して貼り直してください。OpenRouterのKeysページからいつでも削除・再発行できます。</p>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <p class="faq-section-label">リーダーについて</p>
+
+        <div class="faq-item">
+            <p class="faq-q">レン・ミハル・カズコ、誰を選べばいい？</p>
+            <p class="faq-a">好みで選んでください。同じカードが出ても、三者三様の読み方をします。厳しいことをはっきり言ってほしいならレン、寄り添ってほしいならミハル、ズバッと愛情込めて言ってほしいならカズコ。同じ相談を三人に聞き比べるのもおすすめです。</p>
+        </div>
+
+        <div class="faq-item">
+            <p class="faq-q">リーダーは今後増える？</p>
+            <p class="faq-a">増える予定です。占術の追加とともに、新しいリーダーの解放も検討しています。</p>
+        </div>
+    </div>
+
+    <div class="cta-wrap">
+        <p>他に気になることがあれば、お気軽にどうぞ。</p>
+        <a class="cta-btn" href="luminous-reading.html">占いをはじめる</a>
+    </div>
+</main>
+<footer>
+    <p>&copy; 2025 Luminous Salon. Designed for Intuitive Readers.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>はじめかた - Luminous Salon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Zen+Old+Mincho:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --bg-color: #FDFBF7;
+    --text-color: #333333;
+    --accent-color: #C5A059;
+    --accent-hover: #A77D4A;
+    --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    --font-jp: 'Zen Old Mincho', serif;
+    --font-en: 'Cormorant Garamond', serif;
+}
+* { box-sizing: border-box; }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-jp);
+    margin: 0; padding: 0;
+    line-height: 1.8;
+    display: flex; flex-direction: column; min-height: 100vh;
+}
+.site-header {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    border-bottom: 1px solid rgba(197,160,89,0.2);
+}
+.site-header h1 { font-family: var(--font-en); font-size: 2.4rem; margin: 0; font-weight: 400; letter-spacing: 0.1em; }
+.site-header h1 a { color: inherit; text-decoration: none; }
+.subtitle { font-size: 0.85rem; color: var(--accent-color); margin-top: 0.4rem; letter-spacing: 0.2em; }
+main { flex: 1; max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 4rem; width: 100%; }
+.page-title { font-family: var(--font-en); font-size: 2rem; font-weight: 400; letter-spacing: 0.08em; text-align: center; margin-bottom: 0.5rem; }
+.page-subtitle { text-align: center; font-size: 0.85rem; color: #999; margin-bottom: 3rem; letter-spacing: 0.1em; }
+.section { margin-bottom: 3.5rem; }
+.section-label { font-size: 0.7rem; letter-spacing: 0.25em; color: var(--accent-color); text-transform: uppercase; margin-bottom: 0.6rem; }
+.section h2 { font-family: var(--font-en); font-size: 1.5rem; font-weight: 400; margin: 0 0 1.2rem; padding-bottom: 0.6rem; border-bottom: 1px solid rgba(197,160,89,0.2); }
+.section p { font-size: 0.95rem; margin: 0 0 1rem; color: #444; }
+.section p:last-child { margin-bottom: 0; }
+.steps { list-style: none; padding: 0; margin: 0; }
+.steps li { display: flex; gap: 1.2rem; align-items: flex-start; margin-bottom: 1.8rem; padding-bottom: 1.8rem; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.steps li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.step-num { flex-shrink: 0; width: 36px; height: 36px; border: 1px solid var(--accent-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-en); font-size: 0.9rem; color: var(--accent-color); margin-top: 0.1rem; }
+.step-body { flex: 1; }
+.step-body strong { display: block; font-size: 1rem; margin-bottom: 0.4rem; font-weight: 600; }
+.step-body p { font-size: 0.88rem; color: #666; margin: 0 0 0.5rem; line-height: 1.7; }
+.step-link { display: inline-block; margin-top: 0.5rem; color: var(--accent-color); font-size: 0.85rem; text-decoration: none; border-bottom: 1px solid rgba(197,160,89,0.3); padding-bottom: 1px; }
+.step-link:hover { border-color: var(--accent-color); }
+.cost-box { background: #fff; border: 1px solid rgba(197,160,89,0.25); border-radius: 8px; padding: 1.5rem 1.8rem; margin-top: 1.2rem; box-shadow: var(--card-shadow); }
+.cost-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.9rem; }
+.cost-row:last-of-type { border-bottom: none; }
+.cost-label { color: #777; }
+.cost-value { font-family: var(--font-en); font-size: 1rem; }
+.cost-note { margin-top: 1rem; font-size: 0.8rem; color: #aaa; line-height: 1.6; }
+.why-box { background: rgba(197,160,89,0.05); border-left: 3px solid var(--accent-color); padding: 1.2rem 1.5rem; border-radius: 0 6px 6px 0; margin-top: 1rem; }
+.why-box p { font-size: 0.88rem; color: #555; margin: 0; line-height: 1.9; }
+.cta-wrap { text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(197,160,89,0.2); }
+.cta-wrap p { font-size: 0.85rem; color: #999; margin-bottom: 1.5rem; }
+.cta-btn { display: inline-block; padding: 1rem 3rem; background: var(--text-color); color: #fff; font-family: var(--font-jp); font-size: 1rem; letter-spacing: 0.1em; text-decoration: none; border-radius: 2px; transition: background 0.3s; }
+.cta-btn:hover { background: var(--accent-color); }
+footer { text-align: center; padding: 2rem; font-size: 0.8rem; color: #999; border-top: 1px solid rgba(0,0,0,0.05); }
+@media (max-width: 600px) {
+    .site-header h1 { font-size: 1.8rem; }
+    main { padding: 2rem 1rem 3rem; }
+    .cost-row { flex-direction: column; gap: 0.2rem; }
+}
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <h1><a href="luminous-reading.html">Luminous Salon</a></h1>
+    <p class="subtitle">はじめかた</p>
+</header>
+<main>
+    <p class="page-title">Setup Guide</p>
+    <p class="page-subtitle">AIリーディング機能を使うための準備</p>
+
+    <div class="section">
+        <p class="section-label">About</p>
+        <h2>なぜAPIキーが必要なのか</h2>
+        <p>難しいことは何もありません。APIキーを発行して、貼り付けるだけです。</p>
+        <p>Luminous SalonのAIリーディングは、あなた自身のAPIキーを使って動作します。</p>
+        <p>多くのAI占いサービスは運営側がAPIコストを負担し、月額料金で回収しています。このアプリはその逆で、使った分だけあなたが直接支払う仕組みです。</p>
+        <p>余計なサブスクリプションはありません。使わない月は一切かかりません。</p>
+    </div>
+
+    <div class="section">
+        <p class="section-label">Step by Step</p>
+        <h2>OpenRouterの登録と設定</h2>
+        <ol class="steps">
+            <li>
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <strong>OpenRouterのアカウントを作成する</strong>
+                    <p>OpenRouterはさまざまなAIモデルを一箇所から使えるサービスです。GoogleアカウントやGitHubで簡単に登録できます。</p>
+                    <a class="step-link" href="https://openrouter.ai" target="_blank">openrouter.ai を開く →</a>
+                </div>
+            </li>
+            <li>
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <strong>クレジットをチャージする</strong>
+                    <p>ログイン後、右上のアイコンから「Credits」を開きます。$10（約1,500円）を目安にチャージしてください。クレジットに有効期限はありません。</p>
+                    <a class="step-link" href="https://openrouter.ai/credits" target="_blank">Credits ページを開く →</a>
+                </div>
+            </li>
+            <li>
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <strong>APIキーを発行する</strong>
+                    <p>「Keys」ページを開き、「Create Key」ボタンを押します。名前は何でも構いません（例：luminous）。</p>
+                    <p>表示されたキー（sk-or-v1-... で始まる文字列）をコピーしてください。このキーは一度しか表示されないので、必ずコピーしてから閉じてください。</p>
+                    <a class="step-link" href="https://openrouter.ai/keys" target="_blank">Keys ページを開く →</a>
+                </div>
+            </li>
+            <li>
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <strong>プライバシー設定を確認する（推奨）</strong>
+                    <p>OpenRouterはデフォルトではプロンプト（相談内容）を保存しません。ただし念のため、アカウントのPrivacy設定を開き、「Allow providers to train on my data」がオフになっていることを確認してください。</p>
+                    <p>これにより、あなたの相談内容がAIの学習データに使われることを防げます。</p>
+                    <a class="step-link" href="https://openrouter.ai/settings/privacy" target="_blank">プライバシー設定を開く →</a>
+                </div>
+            </li>
+            <li>
+                <div class="step-num">5</div>
+                <div class="step-body">
+                    <strong>アプリにAPIキーを入力する</strong>
+                    <p>Luminous Salonのトップページに戻り、APIキー入力欄にコピーしたキーを貼り付けて「保存」を押してください。キーはあなたのブラウザ内にのみ保存されます。</p>
+                    <p style="font-size:0.82rem;color:#aaa;">※ブラウザのキャッシュをクリアするとキーが消えます。その際は再入力してください。</p>
+                </div>
+            </li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <p class="section-label">Cost</p>
+        <h2>コストについて</h2>
+        <div class="cost-box">
+            <div class="cost-row">
+                <span class="cost-label">1回のリーディングコスト</span>
+                <span class="cost-value">約 0.02円</span>
+            </div>
+            <div class="cost-row">
+                <span class="cost-label">$10チャージで使える回数</span>
+                <span class="cost-value">約 70,000回</span>
+            </div>
+            <div class="cost-row">
+                <span class="cost-label">毎日1回使った場合</span>
+                <span class="cost-value">約 190年分</span>
+            </div>
+            <p class="cost-note">※ スプレッドや相談内容の長さによって変動します。上記はケルト十字（10枚）での概算です。</p>
+        </div>
+        <div class="why-box">
+            <p>$10を目安にしているのは、OpenRouterのチャージ最低金額に近く、かつ実質的に使い切る心配がない金額だからです。余ったクレジットは他のAIモデルにも使えます。</p>
+        </div>
+        <p style="font-size:0.88rem;color:#666;margin-top:1.2rem;">残高や使用履歴は、OpenRouterのダッシュボードからいつでも確認できます。<br>
+        <a class="step-link" href="https://openrouter.ai/activity" target="_blank">使用状況を確認する →</a></p>
+    </div>
+
+    <div class="section">
+        <p class="section-label">Model</p>
+        <h2>なぜQwen 2.5 72Bなのか</h2>
+        <p>このアプリはデフォルトで <strong>Qwen 2.5 72B Instruct</strong>（Alibaba製）を使用しています。</p>
+        <div class="why-box">
+            <p>
+                <strong>① コスト</strong><br>
+                同規模のモデルの中で最安水準。1回あたり0.02円という低コストを実現しています。<br><br>
+                <strong>② 日本語品質</strong><br>
+                29言語に対応しており、日本語のリーディング文章が自然です。<br><br>
+                <strong>③ 出力量</strong><br>
+                最大8,000トークンの出力に対応。ケルト十字のような複雑なスプレッドでも、十分なリーディングを生成できます。
+            </p>
+        </div>
+    </div>
+
+    <div class="cta-wrap">
+        <p>準備ができたら、占いをはじめましょう。</p>
+        <a class="cta-btn" href="luminous-reading.html">Luminous Salon へ戻る</a>
+    </div>
+</main>
+<footer>
+    <p>&copy; 2025 Luminous Salon. Designed for Intuitive Readers.</p>
+</footer>
+</body>
+</html>
