@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luminous Salon - AI Reading</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Zen+Old+Mincho:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+/* === BASE === */
+:root {
+    --bg-color: #FDFBF7;
+    --text-color: #333333;
+    --accent-color: #C5A059;
+    --accent-hover: #A77D4A;
+    --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    --font-jp: 'Zen Old Mincho', serif;
+    --font-en: 'Cormorant Garamond', serif;
+}
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-jp);
+    margin: 0; padding: 0;
+    line-height: 1.6;
+    display: flex; flex-direction: column; min-height: 100vh;
+    overflow-x: hidden;
+}
+.site-header {
+    text-align: center;
+    padding: 3rem 1rem;
+    border-bottom: 1px solid rgba(197,160,89,0.2);
+}
+.site-header h1 {
+    font-family: var(--font-en);
+    font-size: 3rem; margin: 0;
+    font-weight: 400; letter-spacing: 0.1em;
+}
+.subtitle { font-size: 0.9rem; color: var(--accent-color); margin-top: 0.5rem; letter-spacing: 0.2em; }
+main { flex: 1; padding: 2rem 1rem; max-width: 1200px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+h2, h3 { text-align: center; font-weight: 400; margin-bottom: 1.5rem; }
+
+/* === API KEY SETUP === */
+.api-setup {
+    max-width: 520px; margin: 0 auto 2.5rem;
+    background: #fff; border: 1px solid rgba(197,160,89,0.25);
+    border-radius: 8px; padding: 1.8rem 2rem;
+    box-shadow: var(--card-shadow);
+}
+.api-setup h3 { margin-top: 0; font-size: 1rem; letter-spacing: 0.08em; color: var(--accent-color); text-align: left; }
+.api-setup p { font-size: 0.82rem; color: #888; line-height: 1.7; margin: 0 0 1rem; }
+.api-setup a { color: var(--accent-color); }
+.api-row { display: flex; gap: 0.6rem; align-items: center; }
+.api-row input {
+    flex: 1; padding: 0.6rem 0.8rem;
+    border: 1px solid rgba(197,160,89,0.35); border-radius: 4px;
+    font-family: var(--font-en); font-size: 0.9rem;
+    background: var(--bg-color); color: var(--text-color);
+    outline: none;
+}
+.api-row input:focus { border-color: var(--accent-color); }
+.api-save-btn {
+    padding: 0.6rem 1.2rem;
+    background: var(--accent-color); color: #fff;
+    border: none; border-radius: 4px;
+    font-family: var(--font-jp); font-size: 0.85rem;
+    cursor: pointer; white-space: nowrap;
+    transition: background 0.2s;
+}
+.api-save-btn:hover { background: var(--accent-hover); }
+.api-status { font-size: 0.78rem; margin-top: 0.5rem; height: 1em; }
+.api-status.ok { color: var(--accent-color); }
+.api-status.err { color: #9e2a2b; }
+
+/* === BUTTONS === */
+.divination-options, .spread-options {
+    display: flex; justify-content: center;
+    gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2rem;
+}
+button {
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    font-family: var(--font-jp);
+    cursor: pointer; transition: all 0.3s ease;
+}
+.divination-btn {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    width: 120px; height: 140px;
+    border-radius: 8px; box-shadow: var(--card-shadow);
+    background-color: #fff;
+}
+.divination-btn .icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.divination-btn.active, .divination-btn:hover { background-color: var(--accent-color); color: #fff; transform: translateY(-2px); }
+.spread-btn { padding: 0.8rem 1.5rem; border-radius: 30px; font-size: 1rem; }
+.spread-btn.active, .spread-btn:hover { background-color: var(--accent-color); color: #fff; }
+.action-btn {
+    display: block; margin: 2rem auto;
+    padding: 1rem 3rem; font-size: 1.2rem;
+    background-color: var(--text-color); color: #fff;
+    border: none; border-radius: 2px; letter-spacing: 0.1em;
+}
+.action-btn:hover { background-color: var(--accent-color); }
+.action-btn.secondary {
+    background-color: transparent;
+    border: 1px solid var(--text-color); color: var(--text-color);
+}
+.action-btn.secondary:hover { background-color: rgba(0,0,0,0.05); }
+
+/* === CARDS === */
+.cards-container {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 1rem; max-width: 900px; margin: 0 auto;
+}
+.card-slot {
+    display: flex; flex-direction: column;
+    align-items: center; width: 110px;
+    animation: fadeIn 1s ease-in-out; text-align: center;
+}
+.card-visual {
+    width: 100px; height: 170px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0; border-radius: 6px;
+    box-shadow: var(--card-shadow);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 0.5rem; position: relative;
+    transition: transform 0.5s ease; overflow: hidden;
+}
+.card-visual.reversed { transform: rotate(180deg); }
+.card-visual.lenormand .visual-inner { font-size: 1.8rem; }
+.visual-inner {
+    text-align: center; font-family: var(--font-en);
+    font-size: 1rem; line-height: 1.1;
+    color: var(--accent-color); opacity: 0.8;
+    word-break: break-word; padding: 0 2px;
+}
+.position-name { font-size: 0.75rem; color: #888; margin-bottom: 0.3rem; height: 1.1em; white-space: nowrap; }
+.card-name { font-family: var(--font-jp); font-weight: 600; font-size: 0.9rem; line-height: 1.2; }
+.key-card .card-visual {
+    border: 2px solid var(--accent-color);
+    background-color: rgba(197,160,89,0.1);
+    box-shadow: 0 0 10px rgba(197,160,89,0.3);
+}
+
+/* === RESULT LAYOUT === */
+.result-wrapper { display: flex; flex-direction: row; gap: 2rem; justify-content: center; align-items: flex-start; width: 100%; }
+.visual-area { flex: 2; display: flex; justify-content: center; flex-direction: column; align-items: center; }
+.list-area { flex: 1; min-width: 250px; text-align: left; display: flex; gap: 1rem; }
+.list-separator { width: 1px; background: linear-gradient(to bottom, transparent, var(--accent-color), transparent); position: relative; display: flex; align-items: center; justify-content: center; }
+.separator-icon { background: var(--bg-color); color: var(--accent-color); padding: 0.5rem 0; font-size: 1.2rem; }
+.result-list { list-style: none; padding: 0; margin: 0; width: 100%; }
+.result-list li { margin-bottom: 0.8rem; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: baseline; }
+.list-pos { font-size: 0.85rem; color: #888; margin-right: 1rem; min-width: 60px; }
+.list-name { font-weight: 600; }
+.reversed-mark { color: #9E2A2B; font-family: var(--font-en); font-weight: 600; margin-left: 0.3rem; font-size: 0.9em; }
+
+/* === AI READING SECTION === */
+.reading-section {
+    max-width: 680px; margin: 2rem auto 0;
+    border-top: 1px solid rgba(197,160,89,0.2);
+    padding-top: 2rem;
+}
+.reading-header {
+    display: flex; align-items: center; gap: 1rem;
+    margin-bottom: 1.5rem; justify-content: center;
+}
+.question-field {
+    width: 100%; box-sizing: border-box;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(197,160,89,0.35); border-radius: 4px;
+    font-family: var(--font-jp); font-size: 0.95rem;
+    background: var(--bg-color); color: var(--text-color);
+    outline: none; resize: none; line-height: 1.6;
+    margin-bottom: 1rem;
+}
+.question-field:focus { border-color: var(--accent-color); }
+.reading-btn {
+    display: block; margin: 0 auto;
+    padding: 0.8rem 2.5rem;
+    background: transparent;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    font-family: var(--font-jp); font-size: 1rem;
+    letter-spacing: 0.12em; border-radius: 2px;
+    cursor: pointer; transition: all 0.3s;
+}
+.reading-btn:hover:not(:disabled) { background: var(--accent-color); color: #fff; }
+.reading-btn:disabled { opacity: 0.4; cursor: wait; }
+.reading-output {
+    margin-top: 1.8rem;
+    font-family: var(--font-jp); font-size: 0.95rem;
+    line-height: 2; color: var(--text-color);
+    white-space: pre-wrap;
+    border-left: 2px solid rgba(197,160,89,0.35);
+    padding-left: 1.2rem;
+    min-height: 2em;
+}
+.reading-loading {
+    text-align: center; color: var(--accent-color);
+    font-size: 0.85rem; letter-spacing: 0.15em;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+.reading-error { color: #9e2a2b; font-size: 0.85rem; margin-top: 1rem; }
+
+/* === TAROT LAYOUTS === */
+.cards-container.tarot-one-layout { display: grid; grid-template-areas: "msg"; justify-content: center; padding: 1rem; }
+.cards-container.tarot-three-layout { display: grid; grid-template-areas: "past present future"; grid-template-columns: repeat(3, 120px); justify-content: center; gap: 1.5rem; }
+.cards-container.tarot-greek-layout { display: grid; grid-template-areas: ". advice ." "feelings present outcome" ". obstacle ."; grid-template-columns: repeat(3, 120px); grid-template-rows: repeat(3, 170px); justify-content: center; gap: 1rem; }
+.cards-container.tarot-horseshoe-layout { display: grid !important; grid-template-columns: repeat(7, 1fr); grid-template-rows: 60px 60px 60px 170px; grid-template-areas: "past . . . . . outcome" ". present . . . obstacles ." ". . near_future . influences . ." ". . . advice . . ."; justify-content: center; gap: 0.5rem; padding: 2rem 0; max-width: 1000px; margin: 0 auto; }
+.cards-container.tarot-horseshoe-layout .card-slot { width: 100px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; margin: 0 auto; }
+.cards-container.tarot-horseshoe-layout .card-visual { width: 100px !important; height: 170px !important; flex-shrink: 0; }
+.cards-container.tarot-celtic-layout { display: grid; grid-template-columns: 120px 120px 120px 50px 120px; grid-template-rows: repeat(4, 170px); grid-template-areas: ". conscious . . outcome" "past cross_center near_future . hopes" ". unconscious . . external" ". . . . querent"; justify-content: center; gap: 0.5rem; padding: 1rem 0; }
+.cards-container.tarot-celtic-layout .card-slot { height: 100%; justify-content: center; position: relative; }
+.cards-container.tarot-celtic-layout .card-slot:first-child .card-name { display: none; }
+.tarot-celtic-layout .celtic-obstacle { transform: none; grid-area: cross_center; z-index: 2; pointer-events: none; justify-content: center; height: 100%; }
+.tarot-celtic-layout .celtic-obstacle .card-visual { transform: rotate(90deg); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+
+/* === LENORMAND LAYOUTS === */
+.cards-container.lenormand-9-layout { display: grid !important; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 400px; margin: 0 auto; padding: 2rem; }
+.cards-container.lenormand-36-layout { display: grid !important; grid-template-columns: repeat(8, 1fr); gap: 0.5rem; max-width: 1000px; margin: 0 auto; }
+.cards-container.lenormand-36-layout .card-slot:nth-child(33) { grid-column-start: 3; }
+.cards-container.lenormand-36-layout .card-visual { width: 100%; height: auto; aspect-ratio: 2/3; }
+.cards-container.lenormand-36-layout .card-name { font-size: 0.8rem; white-space: normal; line-height: 1.1; height: 2.2em; overflow: hidden; }
+.cards-container.lenormand-36-layout .card-slot { width: auto; margin-bottom: 1rem; }
+
+/* === UTILITY === */
+.hidden { display: none !important; }
+.fade-in { animation: fadeIn 0.8s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+footer { text-align: center; padding: 2rem; font-size: 0.8rem; color: #999; border-top: 1px solid rgba(0,0,0,0.05); margin-top: auto; }
+
+@media (max-width: 768px) {
+    .site-header h1 { font-size: 2.2rem; }
+    .result-wrapper { flex-direction: column; align-items: center; }
+    .list-separator { display: none; }
+    .list-area { width: 100%; border-top: 1px solid var(--accent-color); padding: 1rem 0.5rem; }
+    .card-visual { width: 75px; height: 128px; }
+    .card-slot { width: 80px; }
+    .cards-container.tarot-three-layout { grid-template-columns: repeat(3, 80px); gap: 0.5rem; }
+    .tarot-celtic-layout { transform: scale(0.6); transform-origin: top center; height: 400px; overflow: visible; }
+    .cards-container.tarot-greek-layout { transform: scale(0.6); transform-origin: top center; width: 166%; margin-left: -33%; margin-bottom: -200px; }
+    .cards-container.tarot-horseshoe-layout { grid-template-columns: repeat(7, 100px) !important; overflow-x: auto; justify-content: start; }
+    .reading-section { padding: 1.5rem 0.5rem 0; }
+    .api-setup { padding: 1.2rem 1rem; }
+}
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <h1>Luminous Salon</h1>
+    <p class="subtitle">光と星のサンルーム</p>
+</header>
+
+<main>
+    <!-- API Key Setup -->
+    <div class="api-setup" id="apiSetup">
+        <h3>OpenRouter API Key</h3>
+        <p>
+            AIリーディング機能を使うには、<a href="https://openrouter.ai/keys" target="_blank">OpenRouter</a>のAPIキーが必要です。<br>
+            キーはあなたのブラウザにのみ保存され、外部には送信されません。
+            使った分だけ課金されます（目安：1回あたり$0.001〜$0.003）。
+        </p>
+        <div class="api-row">
+            <input type="password" id="apiKeyInput" placeholder="sk-or-v1-..." autocomplete="off" spellcheck="false">
+            <button class="api-save-btn" onclick="saveApiKey()">保存</button>
+        </div>
+        <div class="api-status" id="apiStatus"></div>
+    </div>
+
+    <!-- Selection -->
+    <section id="selection-area" class="fade-in">
+        <h2>占術を選択</h2>
+        <div class="divination-options">
+            <button class="divination-btn" data-type="tarot">
+                <span class="icon">🃏</span>
+                <span class="label">タロット</span>
+            </button>
+            <button class="divination-btn" data-type="lenormand">
+                <span class="icon">🔮</span>
+                <span class="label">ルノルマン</span>
+            </button>
+        </div>
+        <div id="spread-container" class="hidden">
+            <h3>スプレッドを選択</h3>
+            <div id="spread-options" class="spread-options"></div>
+        </div>
+        <button id="divinate-btn" class="action-btn hidden">占う</button>
+    </section>
+
+    <!-- Result -->
+    <section id="result-area" class="hidden">
+        <div class="result-wrapper">
+            <div id="visual-area" class="visual-area"></div>
+            <div id="list-area" class="list-area hidden">
+                <div class="list-separator"><span class="separator-icon">✦</span></div>
+                <ul id="result-list" class="result-list"></ul>
+            </div>
+        </div>
+
+        <!-- AI Reading -->
+        <div class="reading-section" id="readingSection">
+            <textarea class="question-field" id="questionInput" rows="2" placeholder="テーマや質問を入力してください（任意）"></textarea>
+            <button class="reading-btn" id="readingBtn" onclick="requestReading()">AIにリーディングを依頼する</button>
+            <div id="readingOutput" class="reading-output" style="display:none;"></div>
+            <div id="readingError" class="reading-error hidden"></div>
+        </div>
+    </section>
+
+    <button id="reset-btn" class="action-btn secondary hidden">もう一度占う</button>
+</main>
+
+<footer>
+    <p>&copy; 2025 Luminous Salon. Designed for Intuitive Readers.</p>
+</footer>
+
+<script>
+// === DATA ===
+const TAROT_DATA = {
+    majors: ["The Fool","The Magician","The High Priestess","The Empress","The Emperor","The Hierophant","The Lovers","The Chariot","Strength","The Hermit","Wheel of Fortune","Justice","The Hanged Man","Death","Temperance","The Devil","The Tower","The Star","The Moon","The Sun","Judgement","The World"],
+    suits: ["Wands","Cups","Swords","Pentacles"],
+    ranks: ["Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Page","Knight","Queen","King"],
+    translate: function(name) {
+        const mj = {"The Fool":"愚者","The Magician":"魔術師","The High Priestess":"女教皇","The Empress":"女帝","The Emperor":"皇帝","The Hierophant":"法王","The Lovers":"恋人","The Chariot":"戦車","Strength":"力","The Hermit":"隠者","Wheel of Fortune":"運命の輪","Justice":"正義","The Hanged Man":"吊るされた男","Death":"死神","Temperance":"節制","The Devil":"悪魔","The Tower":"塔","The Star":"星","The Moon":"月","The Sun":"太陽","Judgement":"審判","The World":"世界"};
+        if (mj[name]) return mj[name];
+        const sm = {"Wands":"ワンド","Cups":"カップ","Swords":"ソード","Pentacles":"ペンタクル"};
+        const rm = {"Ace":"エース","Two":"2","Three":"3","Four":"4","Five":"5","Six":"6","Seven":"7","Eight":"8","Nine":"9","Ten":"10","Page":"ペイジ","Knight":"ナイト","Queen":"クイーン","King":"キング"};
+        const p = name.split(" of ");
+        if (p.length === 2) return `${sm[p[1]]}の${rm[p[0]]}`;
+        return name;
+    }
+};
+
+const LENORMAND_DATA = [
+    {no:1,name:"騎士"},{no:2,name:"クローバー"},{no:3,name:"船"},{no:4,name:"家"},{no:5,name:"樹木"},{no:6,name:"雲"},{no:7,name:"蛇"},{no:8,name:"棺"},{no:9,name:"花束"},{no:10,name:"鎌"},
+    {no:11,name:"鞭"},{no:12,name:"鳥"},{no:13,name:"子供"},{no:14,name:"狐"},{no:15,name:"熊"},{no:16,name:"星"},{no:17,name:"コウノトリ"},{no:18,name:"犬"},{no:19,name:"塔"},{no:20,name:"庭園"},
+    {no:21,name:"山"},{no:22,name:"道"},{no:23,name:"鼠"},{no:24,name:"ハート"},{no:25,name:"指輪"},{no:26,name:"本"},{no:27,name:"手紙"},{no:28,name:"紳士"},{no:29,name:"淑女"},{no:30,name:"百合"},
+    {no:31,name:"太陽"},{no:32,name:"月"},{no:33,name:"鍵"},{no:34,name:"魚"},{no:35,name:"錨"},{no:36,name:"十字架"}
+];
+
+const SPREADS = {
+    tarot: {
+        "one":  { count:1,  name:"ワンオラクル", layout:["メッセージ"], gridAreas:["msg"] },
+        "three":{ count:3,  name:"3枚引き", layout:["過去/原因","現状/課題","未来/結果"], gridAreas:["past","present","future"] },
+        "greek":{ count:5,  name:"ギリシャ十字", layout:["現状","障害","助言","気持ち","最終結果"], gridAreas:["present","obstacle","advice","feelings","outcome"] },
+        "horseshoe":{ count:7, name:"ホースシュー", layout:["過去","現在","近い未来","解決策/アドバイス","他者の影響","障害/希望","最終結果"], gridAreas:["past","present","near_future","advice","influences","obstacles","outcome"] },
+        "celtic":{ count:10, name:"ケルト十字", layout:["現状","障害","潜在意識","過去","顕在的意図","近い未来","質問者","外部環境","願望/不安","最終結果"], gridAreas:["cross_center","cross_center","unconscious","past","conscious","near_future","querent","external","hopes","outcome"] }
+    },
+    lenormand: {
+        "3": { count:3,  name:"3枚引き",  layout:["1","2","3"], gridAreas:["pos1","pos2","pos3"] },
+        "5": { count:5,  name:"5枚引き",  layout:["1","2","3","4","5"], gridAreas:["pos1","pos2","pos3","pos4","pos5"] },
+        "9": { count:9,  name:"9枚引き (スクエア)", layout:Array.from({length:9},(_,i)=>`${i+1}`), gridAreas:Array.from({length:9},(_,i)=>`pos${i+1}`) },
+        "36":{ count:36, name:"グランタブロー", layout:[], gridAreas:Array.from({length:36},(_,i)=>`pos${i+1}`) }
+    }
+};
+
+// === STATE ===
+let currentState = { type: null, spread: null, results: null };
+let drawnCards = [];
+
+// === API KEY ===
+function saveApiKey() {
+    const key = document.getElementById('apiKeyInput').value.trim();
+    const status = document.getElementById('apiStatus');
+    if (!key.startsWith('sk-or-')) {
+        status.textContent = 'キーの形式が正しくありません（sk-or-... で始まるもの）';
+        status.className = 'api-status err';
+        return;
+    }
+    localStorage.setItem('luminous_or_key', key);
+    status.textContent = '✦ 保存しました';
+    status.className = 'api-status ok';
+    document.getElementById('apiKeyInput').value = '';
+}
+
+function getApiKey() {
+    return localStorage.getItem('luminous_or_key') || '';
+}
+
+// Load saved key indicator on start
+window.addEventListener('DOMContentLoaded', () => {
+    if (getApiKey()) {
+        const s = document.getElementById('apiStatus');
+        s.textContent = '✦ APIキー設定済み';
+        s.className = 'api-status ok';
+    }
+});
+
+// === INIT ===
+document.querySelectorAll('.divination-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.divination-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentState.type = btn.dataset.type;
+        renderSpreads(currentState.type);
+        currentState.spread = null;
+        document.getElementById('divinate-btn').classList.add('hidden');
+    });
+});
+
+document.getElementById('divinate-btn').addEventListener('click', () => {
+    if (currentState.type && currentState.spread) performDivination();
+});
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+    document.getElementById('result-area').classList.add('hidden');
+    document.getElementById('visual-area').innerHTML = '';
+    document.getElementById('result-list').innerHTML = '';
+    document.getElementById('list-area').classList.add('hidden');
+    document.getElementById('reset-btn').classList.add('hidden');
+    document.getElementById('readingOutput').style.display = 'none';
+    document.getElementById('readingOutput').textContent = '';
+    document.getElementById('readingError').classList.add('hidden');
+    document.getElementById('questionInput').value = '';
+    document.getElementById('selection-area').classList.remove('hidden');
+    drawnCards = [];
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// === SPREADS ===
+function renderSpreads(type) {
+    const spreadOptions = document.getElementById('spread-options');
+    const spreadContainer = document.getElementById('spread-container');
+    spreadOptions.innerHTML = '';
+    const options = SPREADS[type];
+    if (!options) return;
+    Object.keys(options).forEach(key => {
+        const spread = options[key];
+        const btn = document.createElement('button');
+        btn.className = 'spread-btn';
+        btn.textContent = spread.name;
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.spread-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentState.spread = key;
+            document.getElementById('divinate-btn').classList.remove('hidden');
+        });
+        spreadOptions.appendChild(btn);
+    });
+    spreadContainer.classList.remove('hidden');
+    spreadContainer.classList.add('fade-in');
+}
+
+// === DIVINATION ===
+function performDivination() {
+    document.getElementById('selection-area').classList.add('hidden');
+    document.getElementById('result-area').classList.remove('hidden');
+    document.getElementById('reset-btn').classList.remove('hidden');
+    document.getElementById('visual-area').innerHTML = '';
+    document.getElementById('result-list').innerHTML = '';
+    document.getElementById('list-area').classList.add('hidden');
+    document.getElementById('readingOutput').style.display = 'none';
+    document.getElementById('readingOutput').textContent = '';
+    document.getElementById('readingError').classList.add('hidden');
+    drawnCards = [];
+    if (currentState.type === 'tarot') drawTarot(currentState.spread);
+    else if (currentState.type === 'lenormand') drawLenormand(currentState.spread);
+}
+
+function drawTarot(spreadKey) {
+    const spreadDef = SPREADS.tarot[spreadKey];
+    let deck = [];
+    TAROT_DATA.majors.forEach(name => deck.push({ name, isMajor: true }));
+    TAROT_DATA.suits.forEach(suit => {
+        TAROT_DATA.ranks.forEach(rank => deck.push({ name: `${rank} of ${suit}`, isMajor: false }));
+    });
+    deck.sort(() => 0.5 - Math.random());
+    const cards = deck.slice(0, spreadDef.count).map(card => ({
+        ...card,
+        isUpright: Math.random() >= 0.5,
+        jpName: TAROT_DATA.translate(card.name)
+    }));
+    drawnCards = cards.map((c, i) => ({ position: spreadDef.layout[i] || `#${i+1}`, name: c.jpName, isUpright: c.isUpright }));
+    renderCards(cards, spreadDef.layout, 'tarot', spreadKey);
+}
+
+function drawLenormand(spreadKey) {
+    const spreadDef = SPREADS.lenormand[spreadKey];
+    const deck = [...LENORMAND_DATA].sort(() => 0.5 - Math.random());
+    const cards = deck.slice(0, spreadDef.count);
+    let layout = spreadDef.layout || [];
+    if (spreadKey === '36') layout = Array(36).fill("").map((_, i) => `Pos ${i+1}`);
+    drawnCards = cards.map((c, i) => ({ position: layout[i] || `#${i+1}`, name: c.name, no: c.no }));
+    renderCards(cards, layout, 'lenormand', spreadKey);
+}
+
+// === RENDER ===
+function renderCards(cards, layout, type, spreadKey) {
+    const container = document.createElement('div');
+    container.className = 'cards-container';
+    if (type === 'tarot') {
+        container.classList.add(`tarot-${spreadKey}-layout`);
+        document.getElementById('list-area').classList.remove('hidden');
+    } else {
+        container.classList.add(`lenormand-${spreadKey}-layout`);
+    }
+
+    cards.forEach((card, index) => {
+        const slot = document.createElement('div');
+        slot.className = 'card-slot';
+        if (type === 'tarot') {
+            const spreadDef = SPREADS[type][spreadKey];
+            if (spreadDef?.gridAreas?.[index]) slot.style.gridArea = spreadDef.gridAreas[index];
+            if (spreadKey === 'celtic' && index === 1) slot.classList.add('celtic-obstacle');
+            const li = document.createElement('li');
+            const posText = layout?.[index] || `#${index+1}`;
+            const reversedMark = card.isUpright === false ? ' <span class="reversed-mark">(R)</span>' : '';
+            li.innerHTML = `<span class="list-pos">${posText}</span><span class="list-name">${card.jpName || card.name}${reversedMark}</span>`;
+            document.getElementById('result-list').appendChild(li);
+        }
+        if (type === 'lenormand' && (card.no === 28 || card.no === 29)) slot.classList.add('key-card');
+        if (type !== 'tarot') {
+            const posName = document.createElement('div');
+            posName.className = 'position-name';
+            posName.textContent = layout?.[index] || `#${index+1}`;
+            slot.appendChild(posName);
+        }
+        const visual = document.createElement('div');
+        visual.className = `card-visual ${type}`;
+        if (card.isUpright === false) visual.classList.add('reversed');
+        const visualContent = document.createElement('div');
+        visualContent.className = 'visual-inner';
+        if (type === 'tarot') {
+            visualContent.innerHTML = formatTarotVisual(card.name);
+            if (card.isUpright === false) visualContent.style.transform = 'rotate(180deg)';
+        } else {
+            visualContent.textContent = card.no;
+            visualContent.style.fontFamily = 'var(--font-en)';
+        }
+        visual.appendChild(visualContent);
+        slot.appendChild(visual);
+        if (type !== 'tarot') {
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'card-name';
+            nameDiv.textContent = card.jpName || card.name;
+            slot.appendChild(nameDiv);
+        }
+        container.appendChild(slot);
+    });
+    document.getElementById('visual-area').appendChild(container);
+}
+
+function formatTarotVisual(name) {
+    let f = name.replace(' of ', '<br>of<br>').replace('The ', 'The<br>');
+    const lw = { "Temperance":"Tempe<br>rance","Judgement":"Judge<br>ment","Hierophant":"Hiero<br>phant","Strength":"Stre<br>ngth","Empress":"Emp<br>ress","Emperor":"Emp<br>eror","Justice":"Jus<br>tice","Hermit":"Her<br>mit","Chariot":"Cha<br>riot","Hanged Man":"Hanged<br>Man" };
+    Object.keys(lw).forEach(w => { if (f.includes(w)) f = f.replace(w, lw[w]); });
+    return f;
+}
+
+// === AI READING ===
+async function requestReading() {
+    const apiKey = getApiKey();
+    if (!apiKey) {
+        document.getElementById('readingError').textContent = 'APIキーが設定されていません。上部の入力欄から保存してください。';
+        document.getElementById('readingError').classList.remove('hidden');
+        return;
+    }
+    if (drawnCards.length === 0) return;
+
+    const question = document.getElementById('questionInput').value.trim();
+    const btn = document.getElementById('readingBtn');
+    const output = document.getElementById('readingOutput');
+    const errorEl = document.getElementById('readingError');
+
+    btn.disabled = true;
+    errorEl.classList.add('hidden');
+    output.style.display = 'block';
+    output.innerHTML = '<div class="reading-loading">読み解いています ...</div>';
+
+    // Build card context
+    const spreadName = SPREADS[currentState.type]?.[currentState.spread]?.name || '';
+    const cardLines = drawnCards.map(c => {
+        if (currentState.type === 'tarot') {
+            return `・${c.position}：${c.name}（${c.isUpright ? '正位置' : '逆位置'}）`;
+        } else {
+            return `・${c.position}：${c.name}`;
+        }
+    }).join('\n');
+
+    const prompt = `あなたは経験豊かなタロット占い師です。以下のカードが出ました。
+占術：${currentState.type === 'tarot' ? 'タロット' : 'ルノルマン'}
+スプレッド：${spreadName}
+${question ? `テーマ・質問：${question}` : ''}
+
+【出たカード】
+${cardLines}
+
+各ポジションのカードの意味と、全体を通じたリーディングを、落ち着いた文体で日本語で述べてください。解釈の押しつけにならないよう、読み手が自分で考える余地を残してください。`;
+
+    try {
+        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`,
+                'HTTP-Referer': window.location.href,
+                'X-Title': 'Luminous Salon'
+            },
+            body: JSON.stringify({
+                model: 'qwen/qwen-2.5-72b-instruct',
+                messages: [{ role: 'user', content: prompt }],
+                max_tokens: 1200,
+                temperature: 0.75
+            })
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.error?.message || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        const text = data.choices?.[0]?.message?.content || '';
+        output.textContent = text;
+
+    } catch (e) {
+        output.style.display = 'none';
+        errorEl.textContent = `エラーが発生しました：${e.message}`;
+        errorEl.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+    }
+}
+</script>
+</body>
+</html>
