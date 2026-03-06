@@ -384,9 +384,12 @@ function getApiKey() {
 // Load saved key indicator on start
 window.addEventListener('DOMContentLoaded', () => {
     if (getApiKey()) {
-        const s = document.getElementById('apiStatus');
-        s.textContent = '✦ APIキー設定済み';
-        s.className = 'api-status ok';
+        document.getElementById('apiSetup').classList.add('hidden');
+        // Add small "reconfigure" link below header
+        const link = document.createElement('p');
+        link.style.cssText = 'text-align:center;font-size:0.75rem;color:#bbb;margin:0.5rem 0 1.5rem;';
+        link.innerHTML = '<a href="#" style="color:#bbb;text-decoration:none;" onclick="document.getElementById(\'apiSetup\').classList.remove(\'hidden\');this.parentNode.remove();return false;">APIキーを変更する</a>';
+        document.querySelector('main').prepend(link);
     }
 });
 
@@ -589,7 +592,13 @@ ${question ? `テーマ・質問：${question}` : ''}
 【出たカード】
 ${cardLines}
 
-各ポジションのカードの意味と、全体を通じたリーディングを、落ち着いた文体で日本語で述べてください。解釈の押しつけにならないよう、読み手が自分で考える余地を残してください。`;
+以下の構成で、落ち着いた文体で日本語にてリーディングしてください。解釈を押しつけず、読み手が自分で考える余地を残してください。
+
+【全体のリーディング】
+カード全体が示す流れや傾向を、2〜3段落でまとめてください。
+
+【各カードの解説】
+ポジションごとに、カードが示す意味を簡潔に述べてください。`;
 
     try {
         const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
