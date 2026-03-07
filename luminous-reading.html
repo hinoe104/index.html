@@ -402,6 +402,7 @@ footer { text-align: center; padding: 2rem; font-size: 0.8rem; color: #999; bord
         <a href="privacy.html" style="color:#bbb;font-size:0.8rem;text-decoration:none;margin:0 0.8rem;">プライバシーポリシー</a>
         <a href="tokushoho.html" style="color:#bbb;font-size:0.8rem;text-decoration:none;margin:0 0.8rem;">特定商取引法</a>
         <a href="terms.html" style="color:#bbb;font-size:0.8rem;text-decoration:none;margin:0 0.8rem;">利用規約</a>
+        <a href="https://line.me/R/ti/p/@656htpns" target="_blank" style="color:#C5A059;font-size:0.8rem;text-decoration:none;margin:0 0.8rem;">✦ 鑑定のご依頼</a>
         <a href="https://forms.gle/pV5Xpm13ybHYWXmt6" target="_blank" style="color:#bbb;font-size:0.8rem;text-decoration:none;margin:0 0.8rem;">お問い合わせ</a>
     </p>
 </footer>
@@ -772,6 +773,23 @@ ${cardLines}
         const data = await res.json();
         const text = data.choices?.[0]?.message?.content || '';
         output.textContent = text;
+
+        // 使用回数カウント＆CTA表示
+        const count = parseInt(localStorage.getItem('luminous_reading_count') || '0') + 1;
+        localStorage.setItem('luminous_reading_count', count);
+        if (count >= 5) {
+            const existing = document.getElementById('line-cta');
+            if (!existing) {
+                const cta = document.createElement('div');
+                cta.id = 'line-cta';
+                cta.style.cssText = 'margin-top:2rem;padding:1.2rem 1.5rem;border:1px solid rgba(197,160,89,0.3);background:rgba(197,160,89,0.05);text-align:center;';
+                cta.innerHTML = `
+                    <p style="font-size:0.85rem;color:#7a6a50;margin-bottom:0.8rem;">いつもありがとうございます。よかったら、人間が占うこともできます。</p>
+                    <a href="https://line.me/R/ti/p/@656htpns" target="_blank" style="display:inline-block;padding:0.6rem 1.8rem;background:#C5A059;color:#fff;text-decoration:none;font-size:0.85rem;letter-spacing:0.1em;">直接鑑定のご依頼はこちら →</a>
+                `;
+                output.parentNode.insertBefore(cta, output.nextSibling);
+            }
+        }
     } catch (e) {
         output.style.display = 'none';
         errorEl.textContent = `エラーが発生しました：${e.message}`;

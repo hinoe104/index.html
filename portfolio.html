@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>占原イチカ — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Shippori+Mincho:wght@400;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --bg: #0e0d0b;
+    --surface: #161410;
+    --gold: #C5A059;
+    --gold-dim: rgba(197,160,89,0.15);
+    --gold-line: rgba(197,160,89,0.25);
+    --text: #f0ece4;
+    --text-muted: #b8ad9a;
+    --text-dim: #6a5f50;
+    --font-en: 'Cormorant Garamond', serif;
+    --font-jp: 'Shippori Mincho', serif;
+    --font-mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; color-scheme: dark; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-jp);
+    line-height: 1.8;
+    overflow-x: hidden;
+}
+
+/* === NOISE TEXTURE === */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+}
+
+/* === HERO === */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 2rem;
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+}
+
+.hero-name {
+    font-family: var(--font-en);
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+}
+
+.hero-name-jp {
+    font-family: var(--font-jp);
+    font-size: clamp(1rem, 3vw, 1.6rem);
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.3em;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.5s;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+}
+
+.tag {
+    border: 1px solid var(--gold-line);
+    padding: 0.35rem 0.9rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+}
+
+.hero-statement {
+    max-width: 540px;
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 2;
+    border-left: 1px solid var(--gold-line);
+    padding-left: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+}
+
+.hero-statement strong {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.scroll-hint {
+    position: absolute;
+    bottom: 3rem;
+    left: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 1s;
+}
+
+.scroll-hint::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--text-dim);
+}
+
+/* === SECTIONS === */
+section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+    border-top: 1px solid var(--text-dim);
+}
+
+.section-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--text-dim);
+    max-width: 80px;
+}
+
+/* === PHILOSOPHY === */
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+}
+
+.philosophy-item {
+    padding: 2rem;
+    border: 1px solid var(--text-dim);
+    position: relative;
+    transition: border-color 0.3s;
+}
+
+.philosophy-item:hover {
+    border-color: var(--gold-line);
+}
+
+.philosophy-num {
+    font-family: var(--font-en);
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--text-dim);
+    line-height: 1;
+    margin-bottom: 1rem;
+}
+
+.philosophy-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: var(--text);
+}
+
+.philosophy-body {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.9;
+}
+
+/* === WORKS === */
+.work-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 3rem;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--text-dim);
+}
+
+.work-item:last-child { border-bottom: none; }
+
+.work-meta {}
+
+.work-number {
+    font-family: var(--font-en);
+    font-size: 4rem;
+    font-weight: 300;
+    color: var(--text-dim);
+    line-height: 1;
+    margin-bottom: 1rem;
+}
+
+.work-type {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+}
+
+.work-name {
+    font-family: var(--font-en);
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+}
+
+.work-name-jp {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+}
+
+.work-content {}
+
+.work-tagline {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+    line-height: 1.6;
+}
+
+.work-body {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 2;
+    margin-bottom: 1.5rem;
+}
+
+.work-points {
+    list-style: none;
+    margin-bottom: 1.5rem;
+}
+
+.work-points li {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--text-dim);
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+}
+
+.work-points li::before {
+    content: '—';
+    color: var(--gold);
+    flex-shrink: 0;
+    font-family: var(--font-en);
+}
+
+.work-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid var(--gold-line);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+}
+
+.work-link:hover { border-color: var(--gold); }
+
+/* === PROCESS === */
+.process-intro {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 2;
+    max-width: 600px;
+    margin-bottom: 3rem;
+}
+
+.process-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1px;
+    background: var(--text-dim);
+    border: 1px solid var(--text-dim);
+}
+
+.process-step {
+    background: var(--bg);
+    padding: 2rem 1.5rem;
+}
+
+.process-step-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    margin-bottom: 1rem;
+}
+
+.process-step-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+}
+
+.process-step-body {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+}
+
+/* === CONTACT === */
+.contact-body {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 2;
+    max-width: 500px;
+    margin-bottom: 2.5rem;
+}
+
+.contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.contact-link {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-decoration: none;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid var(--text-dim);
+    transition: border-color 0.3s, background 0.3s;
+}
+
+.contact-link:hover {
+    border-color: var(--gold-line);
+    background: var(--gold-dim);
+}
+
+.contact-link-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.contact-link-text {
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+/* === FOOTER === */
+footer {
+    border-top: 1px solid var(--text-dim);
+    padding: 2rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 640px) {
+    .work-item { grid-template-columns: 1fr; gap: 1.5rem; }
+    .work-number { font-size: 2.5rem; }
+    .hero-name { font-size: 3rem; }
+    .philosophy-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr; }
+}
+    </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <p class="hero-eyebrow">Portfolio</p>
+    <h1 class="hero-name">Ichika<br>Uranohara</h1>
+    <p class="hero-name-jp">占原 イチカ</p>
+    <div class="hero-tags">
+        <span class="tag">占い師</span>
+        <span class="tag">プロダクト設計</span>
+        <span class="tag">個人開発</span>
+        <span class="tag">UX思想</span>
+    </div>
+    <p class="hero-statement">
+        <strong>ユーザーに主導権を渡す</strong>ことを前提に、ツールを作っています。<br>
+        依存させない。ジャッジしない。答えを与えるより、引き出す側でいたい。<br>
+        占い師としての現場感覚と、プロダクト設計を掛け合わせて。
+    </p>
+    <p class="scroll-hint">scroll</p>
+</div>
+
+<!-- PHILOSOPHY -->
+<section>
+    <p class="section-label">Philosophy</p>
+    <div class="philosophy-grid">
+        <div class="philosophy-item">
+            <div class="philosophy-num">01</div>
+            <p class="philosophy-title">卒業させる設計</p>
+            <p class="philosophy-body">ツールへの依存は失敗だと思っています。使い続けてもらうより、使わなくてよくなることが成功。設計の出発点はいつもここにあります。</p>
+        </div>
+        <div class="philosophy-item">
+            <div class="philosophy-num">02</div>
+            <p class="philosophy-title">ジャッジしない</p>
+            <p class="philosophy-body">占いも、プロダクトも、ユーザーの選択を裁く場所ではない。善悪を超えたところに立って、ただ正直に向き合う。それが設計思想の核にあります。</p>
+        </div>
+        <div class="philosophy-item">
+            <div class="philosophy-num">03</div>
+            <p class="philosophy-title">責任の所在を明確に</p>
+            <p class="philosophy-body">運営に依存する設計は、トラブルの温床になる。データは手元に、課金も直接に。ユーザーが自分の行動に責任を持てる構造を作る。</p>
+        </div>
+        <div class="philosophy-item">
+            <div class="philosophy-num">04</div>
+            <p class="philosophy-title">フィルタリングとしての設計</p>
+            <p class="philosophy-body">全員に使ってもらう必要はない。ハードルを置くことで、合う人と合わない人を自然に分ける。それがお互いにとって誠実だと思っています。</p>
+        </div>
+    </div>
+</section>
+
+<!-- WORKS -->
+<section>
+    <p class="section-label">Works</p>
+
+    <div class="work-item">
+        <div class="work-meta">
+            <div class="work-number">01</div>
+            <p class="work-type">Web App</p>
+            <p class="work-name">Luminous<br>Salon</p>
+            <p class="work-name-jp">AIタロット占い</p>
+        </div>
+        <div class="work-content">
+            <p class="work-tagline">占いはジャッジじゃない。<br>善悪を超えたところにある。</p>
+            <p class="work-body">中上級者向けのAIタロット・ルノルマン占いアプリ。ユーザー自身のAPIキーを使う設計で、相談内容は運営サーバーに残らない。AIはカードの結果に忠実に読み、道徳的評価をしない。3人のキャラクターがそれぞれの口調でリーディングする。</p>
+            <ul class="work-points">
+                <li>ユーザー自身のOpenRouter APIキーで動作。運営への従属なし</li>
+                <li>「ジャッジしない」をsystem promptレベルで設計</li>
+                <li>レン・ミハル・カズコ、3キャラクターによる差別化されたリーディング</li>
+                <li>特商法・プライバシーポリシー・利用規約まで一貫して設計</li>
+                <li>バラ課金＋全部入りプランによる収益設計</li>
+            </ul>
+            <a class="work-link" href="luminous-reading.html">アプリを見る →</a>
+        </div>
+    </div>
+
+    <div class="work-item">
+        <div class="work-meta">
+            <div class="work-number">02</div>
+            <p class="work-type">Web App / PWA</p>
+            <p class="work-name">Meguri</p>
+            <p class="work-name-jp">習慣化アプリ</p>
+        </div>
+        <div class="work-content">
+            <p class="work-tagline">習慣化アプリが目指すのは、<br>いつか使わなくなること。</p>
+            <p class="work-body">「卒業させる」ことを設計思想の中心に置いた習慣化アプリ。継続を強制せず、ユーザーが自律的に動けるようになることをゴールとする。科学的根拠（実行意図・プリコミットメント）を取り入れたプリセット機能と、達成を祝う演出を両立させた。</p>
+            <ul class="work-points">
+                <li>「依存させない」を出発点にした設計思想</li>
+                <li>実行意図・プリコミットメントなど習慣化の科学的根拠をプリセットに実装</li>
+                <li>月の満ち欠けをモチーフにしたUI・アニメーション</li>
+                <li>達成画面・アルバム機能で継続の記録を可視化</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- PROCESS -->
+<section>
+    <p class="section-label">How I Work</p>
+    <p class="process-intro">コードは書きません。でもプロダクトの思想・設計・UX・収益化までを一気通貫で考えます。占い師として「人が何を求めているか」を現場で掴んできた感覚が、設計の土台になっています。</p>
+    <div class="process-steps">
+        <div class="process-step">
+            <p class="process-step-num">STEP 01</p>
+            <p class="process-step-title">思想から始める</p>
+            <p class="process-step-body">「なぜ作るか」「誰のためか」「何をしないか」を先に決める。機能より先に思想。</p>
+        </div>
+        <div class="process-step">
+            <p class="process-step-num">STEP 02</p>
+            <p class="process-step-title">ユーザー心理を読む</p>
+            <p class="process-step-body">占い師として培った「人が本当に求めているもの」を読む力を設計に活かす。</p>
+        </div>
+        <div class="process-step">
+            <p class="process-step-num">STEP 03</p>
+            <p class="process-step-title">フローを設計する</p>
+            <p class="process-step-body">課金導線・ユーザー体験・情報設計。どこに何を置くかを言語化して詰める。</p>
+        </div>
+        <div class="process-step">
+            <p class="process-step-num">STEP 04</p>
+            <p class="process-step-title">法務・運用まで考える</p>
+            <p class="process-step-body">特商法・プライバシー・著作権リスク。リリースまでの責任を設計の範囲に入れる。</p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section>
+    <p class="section-label">Contact</p>
+    <p class="contact-body">プロダクト設計・UX思想・課金設計など、ご相談はお気軽にどうぞ。占い鑑定のご依頼もこちらから。</p>
+    <div class="contact-links">
+        <a class="contact-link" href="https://twitter.com/urhr_ick" target="_blank">
+            <span class="contact-link-label">X / Twitter</span>
+            <span class="contact-link-text">@urhr_ick</span>
+        </a>
+        <a class="contact-link" href="https://line.me/R/ti/p/@656htpns" target="_blank">
+            <span class="contact-link-label">LINE</span>
+            <span class="contact-link-text">鑑定のご依頼はこちら（30分/3,000円・60分/5,000円）</span>
+        </a>
+        <a class="contact-link" href="mailto:info@luminous-salon.example">
+            <span class="contact-link-label">Mail</span>
+            <span class="contact-link-text">info@luminous-salon.example（※仮）</span>
+        </a>
+    </div>
+</section>
+
+<footer>
+    &copy; 2025 Uranohara Ichika — All rights reserved.
+</footer>
+
+</body>
+</html>
