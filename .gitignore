@@ -1,0 +1,14 @@
+# Git Security Shield
+.env
+*.log
+*.db
+*.sqlite
+node_modules/
+__pycache__/
+.venv/
+.gemini/
+pocketbase/pb_data/
+*.zip
+*.bak
+secrets.json
+config.json
